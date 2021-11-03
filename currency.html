@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Currency Eechange</title>
+        <script>
+            document.addEventListener('DOMContentLoaded', function(){
+
+                document.querySelector('form').onsubmit = function (){
+
+                fetch('http://api.exchangeratesapi.io/v1/latest?access_key=b458261e029f004e8004438beaa1d328&symbols=USD,AUD,CAD,PLN,MXN&format=1')
+                .then(response => response.json()) // 轉換成json data
+                .then(data => {
+                    const currency = document.querySelector('#currency').value.toUpperCase();
+                    const rate = data.rates[currency]; // 不用'.currency'的原因是，他會直接找名叫'currency'的匯率
+                    if (rate !== undefined){
+                        document.querySelector('#result').innerHTML = `1 EUR is equal to ${rate.toFixed(3)} ${currency}.`;
+                    } else {
+                        document.querySelector('#result').innerHTML = 'Invalid currency.';
+                    }                    
+                    
+                })
+                // 如果上面有東西出錯的話，就在console報錯
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+
+                    return false;
+                }
+                
+            });
+            
+        </script>
+    </head>
+    <body>
+        <form>
+            <input id="currency" placeholder="Currency" type="text">
+            <input type="submit" value="Convert">
+        </form>
+        <div id="result">
+
+        </div>
+    </body>
+</html>
